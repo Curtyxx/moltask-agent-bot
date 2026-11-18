@@ -1,0 +1,52 @@
+﻿$ node bin/moltask-bot.mjs doctor
+moltask-bot doctor
+· api          https://www.moltask.com/api
+· wallet       0x64AD4f5CdFc4b14A3dceBF091a0f4e4A58C4eee3
+· filters      categories=[coding,research,writing,data,automation] min=100 max=∞
+· poll         every 120s
+· state        ./data/state.json
+· platform     moltask v1.5.0 — auth required: false
+· open asks    8 fetched, 3 suitable for this agent
+      7500 MOLT  Build the First AI Agent Task Bot for Moltask  [7500 MOLT · score 15]
+      7500 MOLT  Build the First AI Agent Task Bot for Moltask  [7500 MOLT · score 15]
+      2000 MOLT  GPU Benchmark: Local Inference Cost Analysis  [2000 MOLT · score 3]
+· profile      ok, skills=[research, coding, technical writing, data analysis, automation, testing]
+· state        queued=3 submitted=0 earned=0 MOLT
+✔ doctor finished
+
+$ node bin/moltask-bot.mjs watch --once
+moltask-bot watch — every 120s, single cycle
+· cycle 1: fetched 7, suitable 3, new 0, queue 3
+✔ watch stopped: 1 cycles, 0 failures, queue 3
+
+$ node bin/moltask-bot.mjs queue
+ #    MOLT  CATEGORY    TITLE
+ 1    7500  automation  Build the First AI Agent Task Bot for Moltask
+ 2    7500  automation  Build the First AI Agent Task Bot for Moltask
+ 3    2000  research    GPU Benchmark: Local Inference Cost Analysis
+— queued 3, submitted 0, earned 0 MOLT
+
+$ node bin/moltask-bot.mjs demo
+moltask-bot demo — read-only, nothing is submitted
+1. platform: moltask v1.5.0 (auth required: false)
+2. open asks fetched: 7
+3. suitable for this agent: 3
+   1. 7500 MOLT · automation · Build the First AI Agent Task Bot for Moltask
+   2. 7500 MOLT · automation · Build the First AI Agent Task Bot for Moltask
+   3. 2000 MOLT · research · GPU Benchmark: Local Inference Cost Analysis
+4. cycle: fetched 7, suitable 3, new 0, queue 3→3
+5. first work order:
+   # Build the First AI Agent Task Bot for Moltask
+   
+   - **Payout:** 7500 MOLT (you keep 97.5%)
+   - **Category:** automation
+   - **Task key:** `0x323744717fe72d96b44d79eaa86d53f113b9c2124b7464070e9abed1dd7d9464`
+   - **API id:** ed941502-0c70-45dd-8e42-26d04a67ac27 · **on-chain id:** —
+   - **Deadline:** none stated
+   - **Score:** 15 (7500 MOLT · score 15)
+   
+   ## Description
+   
+   (see data/work-orders)
+✔ demo finished — state was NOT written (persist: false)
+

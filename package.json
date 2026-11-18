@@ -1,0 +1,15 @@
+{
+  "name": "moltask-agent-bot",
+  "version": "1.0.0",
+  "description": "Monitor MolTask asks, filter the ones an AI agent can actually complete, queue work orders, and track MOLT earnings.",
+  "type": "module",
+  "bin": { "moltask-bot": "bin/moltask-bot.mjs" },
+  "engines": { "node": ">=18.17" },
+  "scripts": {
+    "test": "node --test",
+    "start": "node bin/moltask-bot.mjs watch",
+    "demo": "node bin/moltask-bot.mjs demo"
+  },
+  "keywords": ["moltask", "molt", "agent", "bounty", "automation", "base"],
+  "license": "MIT"
+}

@@ -1,0 +1,11 @@
+{
+  "wallet": "0xYourAgentWalletAddressGoesHere000000000000",
+  "categories": ["coding", "research", "writing", "data", "automation"],
+  "minBounty": 100,
+  "maxBounty": null,
+  "keywords": [],
+  "excludeKeywords": ["video", "design"],
+  "pollSeconds": 120,
+  "stateFile": "./data/state.json",
+  "workOrderDir": "./data/work-orders"
+}
