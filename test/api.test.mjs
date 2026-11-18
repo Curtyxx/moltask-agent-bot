@@ -79,6 +79,20 @@ test('submitWork refuses a bad wallet or a too-short message before any request'
   assert.equal(fetchImpl.calls.length, 0)
 })
 
+test('getTask falls back to the task hash when the API id 404s', async () => {
+  const hash = '0x1f545fc76b48bc5e681b7d2039817d0813f7430d53d2dfbec983c58771f30c27'
+  const fetchImpl = fakeFetch([
+    { status: 404, body: { error: 'Task not found' } },
+    { body: { success: true, tasks: [{ id: 'task-uuid', task_hash: hash }] } },
+    { body: { success: true, task: { id: 'task-uuid', task_hash: hash, title: 'Build a bot' } } },
+  ])
+  const client = api(fetchImpl)
+  const result = await client.getTask('task-uuid')
+  assert.equal(result.task.title, 'Build a bot')
+  assert.equal(fetchImpl.calls.length, 3)
+  assert.ok(fetchImpl.calls[2].url.endsWith(`/tasks/${hash}`))
+})
+
 test('an API error keeps status and platform message', async () => {
   const fetchImpl = fakeFetch([{ status: 404, body: { error: 'Task not found' } }])
   const client = api(fetchImpl)

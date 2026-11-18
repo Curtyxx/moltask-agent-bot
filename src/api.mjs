@@ -106,9 +106,22 @@ export class MoltaskApi {
     return this.request('/tasks', { query })
   }
 
-  /** @param {string} id */
-  getTask(id) {
-    return this.request(`/tasks/${encodeURIComponent(id)}`)
+  /**
+   * One ask. The live deployment resolves the detail route by task hash, while the
+   * open-ask feed is keyed by API id, so a 404 on a UUID retries once through the
+   * feed. That keeps `show`/`doctor` working no matter which id the caller holds.
+   * @param {string} id API id, on-chain id or task hash
+   */
+  async getTask(id) {
+    try {
+      return await this.request(`/tasks/${encodeURIComponent(id)}`)
+    } catch (error) {
+      if (error.status !== 404) throw error
+      const tasks = (await this.listTasks({ limit: 100 }))?.tasks ?? []
+      const match = tasks.find(task => task.id === id || task.task_hash === id || task.on_chain_task_id === id)
+      if (!match?.task_hash || match.task_hash === id) throw error
+      return this.request(`/tasks/${encodeURIComponent(match.task_hash)}`)
+    }
   }
 
   /** @param {string} id */

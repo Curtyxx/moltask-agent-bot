@@ -1,13 +1,13 @@
-# moltask-bot
+﻿# moltask-bot
 
 **A zero-dependency task bot that lets an AI agent work the [MolTask](https://www.moltask.com) economy:** it polls the open-ask feed, decides which asks the agent can actually finish, turns each one into a work order, submits the finished work under the agent's wallet, and keeps a local ledger of submissions and MOLT payouts.
 
-MolTask has no API key and no signup — the wallet address *is* the identity. So the bot holds no private keys and signs nothing: the address it pays out to is configuration, and every submission is an explicit, human-confirmable action.
+MolTask has no API key and no signup вЂ” the wallet address *is* the identity. So the bot holds no private keys and signs nothing: the address it pays out to is configuration, and every submission is an explicit, human-confirmable action.
 
 ```
-GET /api/tasks ──▶ filter & score ──▶ queue + work order ──▶ agent does the work
-                                                                      │
-       earnings ledger ◀── paid <key> ◀── confirmation ◀── submit <key> --yes
+GET /api/tasks в”Ђв”Ђв–¶ filter & score в”Ђв”Ђв–¶ queue + work order в”Ђв”Ђв–¶ agent does the work
+                                                                      в”‚
+       earnings ledger в—Ђв”Ђв”Ђ paid <key> в—Ђв”Ђв”Ђ confirmation в—Ђв”Ђв”Ђ submit <key> --yes
 ```
 
 ---
@@ -26,7 +26,7 @@ That last part is what makes it a *task bot* rather than a scraper: submissions 
 
 ## Quick start
 
-Requires **Node.js 18.17+** (uses the built-in `fetch`). There are **no dependencies** — `git clone`, done.
+Requires **Node.js 18.17+** (uses the built-in `fetch`). There are **no dependencies** вЂ” `git clone`, done.
 
 ```bash
 git clone https://github.com/Curtyxx/moltask-agent-bot.git
@@ -40,7 +40,7 @@ node bin/moltask-bot.mjs queue         # what is waiting, best first
 node bin/moltask-bot.mjs work          # print the top work order
 ```
 
-`npm test` runs 43 unit tests (filtering, config, state, API client, submission guard) with `node --test`; no network is touched.
+`npm test` runs 44 unit tests (filtering, config, state, API client, submission guard) with `node --test`; no network is touched.
 
 ## Commands
 
@@ -53,7 +53,7 @@ node bin/moltask-bot.mjs work          # print the top work order
 | `submit <key> --message-file <path> [--link <url>] [--link-type <t>] [--yes]` | Submits finished work. **Dry run unless `--yes`** | on `--yes` |
 | `paid <key> --amount <MOLT> [--note "text"]` | Records a confirmed payout in the local ledger | yes |
 | `earnings` | Local totals/ledger plus the on-chain profile | no |
-| `demo` | Read-only tour: fetch → filter → queue → work order. Persists no state | no |
+| `demo` | Read-only tour: fetch в†’ filter в†’ queue в†’ work order. Persists no state | no |
 
 Every command fails closed: an invalid wallet, a missing `--message-file`, or an unrecorded submission is an error, never a silent no-op.
 
@@ -78,16 +78,16 @@ Or copy [`moltask-bot.config.example.json`](moltask-bot.config.example.json) to 
 
 | File | Responsibility |
 |---|---|
-| [`src/api.mjs`](src/api.mjs) | MolTask REST client. Retries idempotent GETs only (`429/5xx`, exponential backoff), never retries a POST — a double submit is a double claim. Validates the wallet and the message length before anything leaves the machine. |
+| [`src/api.mjs`](src/api.mjs) | MolTask REST client. Retries idempotent GETs only (`429/5xx`, exponential backoff), never retries a POST вЂ” a double submit is a double claim. Validates the wallet and the message length before anything leaves the machine. |
 | [`src/filter.mjs`](src/filter.mjs) | Pure suitability rules: category allowlist, bounty floor/ceiling, required and excluded keywords, missing metadata. Ranks by bounty, presence of requirements/deliverables, description depth. Every rejection carries a human-readable reason. |
 | [`src/state.mjs`](src/state.mjs) | One JSON state file written atomically (temp file + rename): `seen`, `queue`, `submissions`, `earnings`. It is the local ledger and the duplicate guard. |
-| [`src/bot.mjs`](src/bot.mjs) | The monitor loop: fetch → filter → enqueue → write a Markdown work order. One failed cycle is logged, not fatal. |
+| [`src/bot.mjs`](src/bot.mjs) | The monitor loop: fetch в†’ filter в†’ enqueue в†’ write a Markdown work order. One failed cycle is logged, not fatal. |
 | [`src/config.mjs`](src/config.mjs) | Env + file + defaults, with warnings instead of exceptions, and a 5s poll floor. |
 | [`bin/moltask-bot.mjs`](bin/moltask-bot.mjs) | CLI surface and the only place that calls `submitWork` / touches the disk. |
 
 ## What "claiming" means here
 
-MolTask has **no claim endpoint** and no exclusivity: an ask stays open until the poster approves a submission, and any number of agents can submit. The bot is explicit about this — "queued" is a local reservation plus a generated work order, not a platform lock. Two consequences are designed in:
+MolTask has **no claim endpoint** and no exclusivity: an ask stays open until the poster approves a submission, and any number of agents can submit. The bot is explicit about this вЂ” "queued" is a local reservation plus a generated work order, not a platform lock. Two consequences are designed in:
 
 1. **No auto-submit by default.** `submit` is a dry run unless you pass `--yes`; the message comes from a file you wrote. Submissions are public and attributed to the wallet, so the bot refuses to invent one.
 2. **Veto before queueing.** The exclude list exists so a cheap, fast, irrelevant ask never becomes a work order in the first place.
@@ -97,7 +97,7 @@ MolTask has **no claim endpoint** and no exclusivity: an ask stays open until th
 - **No keys, no signing.** The bot only ever sends a *wallet address* (a public payout destination). Keep the private key offline; never put it in this repo or in an env var the bot reads.
 - **Public by construction.** Anything submitted is visible on moltask.com and bound to that wallet. Reputation is per address, so pick one agent wallet and stay on it.
 - **Beta platform.** MolTask is in beta and its escrow contracts are unaudited: treat MOLT as an uncertain asset, not as cash, and never fund the wallet beyond gas money.
-- **Fail closed.** Invalid input, a missing wallet, or a submission without a description is an error — the bot would rather stop than guess.
+- **Fail closed.** Invalid input, a missing wallet, or a submission without a description is an error вЂ” the bot would rather stop than guess.
 
 ## Demo
 
@@ -106,21 +106,21 @@ A real, unedited run of `doctor`, `watch --once`, `queue` and `demo` against the
 ```
 $ node bin/moltask-bot.mjs doctor
 moltask-bot doctor
-· platform     moltask v1.5.0 — auth required: false
-· open asks    8 fetched, 3 suitable for this agent
-      7500 MOLT  Build the First AI Agent Task Bot for Moltask  [7500 MOLT · score 15]
-      2000 MOLT  GPU Benchmark: Local Inference Cost Analysis  [2000 MOLT · score 3]
-· profile      ok, skills=[research, coding, technical writing, data analysis, automation, testing]
+В· platform     moltask v1.5.0 вЂ” auth required: false
+В· open asks    8 fetched, 3 suitable for this agent
+      7500 MOLT  Build the First AI Agent Task Bot for Moltask  [7500 MOLT В· score 15]
+      2000 MOLT  GPU Benchmark: Local Inference Cost Analysis  [2000 MOLT В· score 3]
+В· profile      ok, skills=[research, coding, technical writing, data analysis, automation, testing]
 
 $ node bin/moltask-bot.mjs watch --once
-+ queued 7500 MOLT · Build the First AI Agent Task Bot for Moltask → data/work-orders/323744717fe72d96.md
-· cycle 1: fetched 8, suitable 3, new 3, queue 3
++ queued 7500 MOLT В· Build the First AI Agent Task Bot for Moltask в†’ data/work-orders/323744717fe72d96.md
+В· cycle 1: fetched 8, suitable 3, new 3, queue 3
 
 $ node bin/moltask-bot.mjs queue
  #    MOLT  CATEGORY    TITLE
  1    7500  automation  Build the First AI Agent Task Bot for Moltask
  2    2000  research    GPU Benchmark: Local Inference Cost Analysis
-— queued 3, submitted 0, earned 0 MOLT
+вЂ” queued 3, submitted 0, earned 0 MOLT
 ```
 
 The `demo` command then prints the generated work order, and states plainly that it persisted nothing. Screenshots of the same run: [`demo/screenshot-1-doctor-watch-queue.png`](demo/screenshot-1-doctor-watch-queue.png) and [`demo/screenshot-2-demo.png`](demo/screenshot-2-demo.png).
